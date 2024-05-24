@@ -78,7 +78,7 @@ def pretrain_teacher_decoder(teacher, decoder, train_loader, val_loader, device,
             reconstructed_points = decoder(sampled_points)
             
             knn_idx = knn(batch_points, 8) 
-            receptive_fields = compute_receptive_fields(batch_points, knn_idx, 3)  
+            receptive_fields = compute_receptive_fields(batch_points, knn_idx, 1024)  
 
             receptive_fields_tensor = torch.stack(receptive_fields).to(device)
             loss = chamfer_distance(reconstructed_points, receptive_fields_tensor)
@@ -106,7 +106,7 @@ def pretrain_teacher_decoder(teacher, decoder, train_loader, val_loader, device,
                 reconstructed_points = decoder(features)
                 
                 knn_idx = knn(batch_points, 32) 
-                receptive_fields = compute_receptive_fields(batch_points, knn_idx, 3)  
+                receptive_fields = compute_receptive_fields(batch_points, knn_idx, 1024)  
 
                 receptive_fields_tensor = torch.stack(receptive_fields).to(device)
                 
