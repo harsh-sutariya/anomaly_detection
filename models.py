@@ -40,7 +40,6 @@ class LocalFeatureAggregation(nn.Module):
 
 class ResidualBlock(nn.Module):
     def __init__(self, d, k):
-        # papergpt, before try4
         super(ResidualBlock, self).__init__()
         self.shared_mlp = SharedMLP(d, d // 4)
         self.lfa1 = LocalFeatureAggregation(d // 4, d // 2)
@@ -83,6 +82,5 @@ class DecoderModel(nn.Module):
 
     def forward(self, features):
         reconstructed_points = self.mlp(features)
-        # try4
         return reconstructed_points
 

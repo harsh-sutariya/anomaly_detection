@@ -32,9 +32,9 @@ def mesh_to_point_cloud(mesh, num_points=1024):
     return point_cloud
 
 
-def preprocess_modelnet10(num_points=1024):
-    # download_modelnet10(destination_dir)
-    # uncomment this to download the dataset
+def preprocess_modelnet10(download=True, num_points=1024):
+    if download:
+        download_modelnet10(destination_dir)    
     destination_dir = "./modelnet10"
     dataset_dir = os.path.join(destination_dir, "ModelNet10")
     
@@ -100,26 +100,6 @@ class PointCloudDataset(Dataset):
         return torch.tensor(point_cloud, dtype=torch.float32), 0
     
 
-# def get_loader():
-#     point_clouds = preprocess_modelnet10()
-#     print(f"Processed {len(point_clouds)} point clouds.")
-#     print(f"Shape of each point cloud: {point_clouds[0].shape if point_clouds else 'No point clouds processed'}")
-
-#     train_scenes, val_scenes = generate_synthetic_dataset(point_clouds)
-#     print(f"Generated {len(train_scenes)} training scenes and {len(val_scenes)} validation scenes.")
-#     print(f"Shape of a training scene: {train_scenes[0].shape if train_scenes else 'No training scenes'}")
-#     print(f"Shape of a validation scene: {val_scenes[0].shape if val_scenes else 'No validation scenes'}")
-
-#     train_data = PointCloudDataset(train_scenes)
-#     val_data = PointCloudDataset(val_scenes)
-
-#     train_loader = DataLoader(train_data, batch_size=4, shuffle=True)
-#     val_loader = DataLoader(val_data, batch_size=4, shuffle=False)
-#     print(f"Number of batches in train_loader: {len(train_loader)}")
-#     print(f"Number of batches in val_loader: {len(val_loader)}")
-
-#     return train_loader, val_loader
-
 def compute_average_neighbor_distance(point_clouds, k=8):
     distances = []
     for pc in point_clouds:
@@ -147,8 +127,8 @@ def preprocess_and_normalize_modelnet10(num_points=1024, k=8):
     normalized_point_clouds = normalize_point_clouds(point_clouds, average_distance)
     return normalized_point_clouds
 
-def get_loader(normalize_data=True):
-    point_clouds = preprocess_modelnet10()
+def get_loader(download=True, normalize_data=True):
+    point_clouds = preprocess_modelnet10(download=download)
     print(f"Processed {len(point_clouds)} point clouds.")
     print(f"Shape of each point cloud: {point_clouds[0].shape if point_clouds else 'No point clouds processed'}")
 
