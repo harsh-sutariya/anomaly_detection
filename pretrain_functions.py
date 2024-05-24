@@ -7,10 +7,8 @@ import torch.optim as optim
 import wandb
 
 wandb.init(
-    # set the wandb project where this run will be logged
     project="anomaly",
 
-    # track hyperparameters and run metadata
     config={
     "architecture": "Teacher-Decoder",
     "dataset": "ModelNet10"
@@ -39,7 +37,6 @@ def compute_receptive_fields(points, knn_idx, L):
 
 
 def knn(x, k):
-    # papergpt
     xx = torch.sum(x ** 2, dim=2, keepdim=True)
     pairwise_distance = xx + xx.transpose(2, 1) - 2 * torch.matmul(x, x.transpose(2, 1))
     idx = pairwise_distance.topk(k=k, dim=-1, largest=False)[1]

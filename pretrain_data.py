@@ -27,12 +27,12 @@ def download_modelnet10(destination_dir):
         zip_ref.extractall(destination_dir)
     print("Unzipping complete.")
 
-def mesh_to_point_cloud(mesh, num_points=1024):
+def mesh_to_point_cloud(mesh, num_points=16000):
     point_cloud = mesh.sample(num_points)
     return point_cloud
 
 
-def preprocess_modelnet10(download=True, num_points=1024):
+def preprocess_modelnet10(download=True, num_points=16000):
     if download:
         download_modelnet10(destination_dir)    
     destination_dir = "./modelnet10"
@@ -120,7 +120,7 @@ def normalize_point_clouds(point_clouds, average_distance):
         normalized_point_clouds.append(normalized_pc)
     return normalized_point_clouds
 
-def preprocess_and_normalize_modelnet10(num_points=1024, k=8):
+def preprocess_and_normalize_modelnet10(num_points=16000, k=8):
     destination_dir = "./modelnet10"
     point_clouds = preprocess_modelnet10(num_points=num_points)
     average_distance = compute_average_neighbor_distance(point_clouds, k=k)
@@ -145,8 +145,8 @@ def get_loader(download=True, normalize_data=True):
     train_data = PointCloudDataset(train_scenes)
     val_data = PointCloudDataset(val_scenes)
 
-    train_loader = DataLoader(train_data, batch_size=16, shuffle=True)
-    val_loader = DataLoader(val_data, batch_size=16, shuffle=False)
+    train_loader = DataLoader(train_data, batch_size=1, shuffle=True)
+    val_loader = DataLoader(val_data, batch_size=1, shuffle=False)
     print(f"Number of batches in train_loader: {len(train_loader)}")
     print(f"Number of batches in val_loader: {len(val_loader)}")
 

@@ -5,13 +5,14 @@ from torch.utils.data import DataLoader
 import torch
 import pickle
 
-train_loader, val_loader = get_loader(download=True, normalize_data=True)
+train_loader, val_loader = get_loader(download=False, normalize_data=True)
 
 pretrain_train_loader_file_path = "pretrain_train_loader1.pkl"
 pretrain_val_loader_file_path = "pretrain_val_loader1.pkl"
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(device)
 
 with open(pretrain_train_loader_file_path, 'wb') as f:
     pickle.dump((train_loader), f)

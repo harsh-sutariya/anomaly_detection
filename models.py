@@ -70,7 +70,7 @@ class TeacherModel(nn.Module):
         return features
 
 class DecoderModel(nn.Module):
-    def __init__(self, d=64, m=3):
+    def __init__(self, d=64, m=1024):
         super(DecoderModel, self).__init__()
         self.mlp = nn.Sequential(
             nn.Linear(d, 128),
@@ -83,4 +83,3 @@ class DecoderModel(nn.Module):
     def forward(self, features):
         reconstructed_points = self.mlp(features)
         return reconstructed_points
-
