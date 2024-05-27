@@ -27,7 +27,7 @@ def download_modelnet10(destination_dir):
         zip_ref.extractall(destination_dir)
     print("Unzipping complete.")
 
-def mesh_to_point_cloud(mesh, num_points=16000):
+def mesh_to_point_cloud(mesh, num_points=1024):
     point_cloud = mesh.sample(num_points)
     return point_cloud
 
@@ -46,7 +46,7 @@ def preprocess_modelnet10(download=True, num_points=16000):
                 mesh = trimesh.load(file_path, force='mesh')
                 if mesh.is_empty or mesh.extents is None:
                     continue
-                point_cloud = mesh_to_point_cloud(mesh, num_points)
+                point_cloud = mesh_to_point_cloud(mesh)
                 point_clouds.append(point_cloud)
 
     return point_clouds
@@ -75,7 +75,7 @@ def generate_synthetic_scene(point_clouds, num_objects=10, scene_range=3, num_po
 
     scene_pcd = o3d.geometry.PointCloud()
     scene_pcd.points = o3d.utility.Vector3dVector(scene_points)
-    scene_pcd = scene_pcd.farthest_point_down_sample(num_samples=16000)
+    scene_pcd = scene_pcd.farthest_point_down_sample(num_samples=1024)
 
     print(f"Final scene point cloud shape: {np.asarray(scene_pcd.points).shape}")
     return np.asarray(scene_pcd.points)
