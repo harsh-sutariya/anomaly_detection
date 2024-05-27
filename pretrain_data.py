@@ -75,7 +75,7 @@ def generate_synthetic_scene(point_clouds, num_objects=10, scene_range=3, num_po
 
     scene_pcd = o3d.geometry.PointCloud()
     scene_pcd.points = o3d.utility.Vector3dVector(scene_points)
-    scene_pcd = scene_pcd.farthest_point_down_sample(num_samples=1024)
+    scene_pcd = scene_pcd.farthest_point_down_sample(num_samples=16000)
 
     print(f"Final scene point cloud shape: {np.asarray(scene_pcd.points).shape}")
     return np.asarray(scene_pcd.points)

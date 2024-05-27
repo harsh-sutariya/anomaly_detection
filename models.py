@@ -70,7 +70,7 @@ class TeacherModel(nn.Module):
         return features
 
 class DecoderModel(nn.Module):
-    def __init__(self, d=64, m=1024):
+    def __init__(self, d=64, m=3):
         super(DecoderModel, self).__init__()
         self.mlp = nn.Sequential(
             nn.Linear(d, 128),

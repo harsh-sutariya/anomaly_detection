@@ -1,14 +1,16 @@
-from pretrain_data import get_loader
-import models
-from pretrain_functions import pretrain_teacher_decoder
+from student_data import get_loader
 from torch.utils.data import DataLoader
 import torch
 import pickle
+import models
+from student_functions import train_student
 
-train_loader, val_loader = get_loader(download=False, normalize_data=True)
 
-pretrain_train_loader_file_path = "pretrain_train_loader0.pkl"
-pretrain_val_loader_file_path = "pretrain_val_loader0.pkl"
+train_loader, val_loader = get_loader()
+
+pretrain_train_loader_file_path = "student_train_loader1024.pkl"
+pretrain_val_loader_file_path = "student_val_loader1024.pkl"
+teacher_model_weights_path = "best_teacher0.pth"
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -27,6 +29,6 @@ with open(pretrain_val_loader_file_path, 'rb') as f:
     val_loader = pickle.load(f)
 
 teacher_model = models.TeacherModel(d=64, k=8).to(device)
-decoder_model = models.DecoderModel(d=64).to(device)
+student_model = models.TeacherModel(d=64, k=8).to(device)
 
-pretrain_teacher_decoder(teacher_model, decoder_model, train_loader, val_loader, device)
+train_student(teacher_model, student_model, teacher_model_weights_path, train_loader, val_loader, device)

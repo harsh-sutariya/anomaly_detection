@@ -1,0 +1,1 @@
+Average Neighbor Distance: 15.199234631065725

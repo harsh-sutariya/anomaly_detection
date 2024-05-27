@@ -53,6 +53,27 @@ def chamfer_distance(pc1, pc2):
     chamfer_dist = torch.mean(min_dist1, dim=1) + torch.mean(min_dist2, dim=1)
     return chamfer_dist.mean()
 
+# def chamfer_distance(pc1, pc2):
+#     # Reshape pc2 to have the same number of points as pc1
+#     pc2_reshaped = pc2.view(-1, pc2.size(1) * pc2.size(2), pc2.size(3))  # [1024, 3]
+#     pc1 = pc1.squeeze(0)  # [1024, 1024]
+    
+#     # Expand dimensions to make them compatible for broadcasting
+#     pc1_expand = pc1.unsqueeze(1)  # [1024, 1, 1024]
+#     pc2_expand = pc2_reshaped.unsqueeze(0)  # [1, 1024, 3]
+
+#     # Calculate squared distances
+#     dist = torch.sum((pc1_expand - pc2_expand) ** 2, dim=-1)  # [1024, 1024]
+
+#     # Find minimum distances
+#     min_dist1, _ = torch.min(dist, dim=1)  # [1024]
+#     min_dist2, _ = torch.min(dist, dim=0)  # [1024]
+
+#     # Compute chamfer distance
+#     chamfer_dist = torch.mean(min_dist1) + torch.mean(min_dist2)
+    
+#     return chamfer_dist
+
 def pretrain_teacher_decoder(teacher, decoder, train_loader, val_loader, device, num_epochs=250, lr=1e-3, weight_decay=1e-6, save_path_teacher='best_teacher.pth', save_path_decoder='best_decoder.pth'):
     
     wandb.config.update({"num_epochs": num_epochs, "learning_rate": lr, "weight_decay": weight_decay})
@@ -78,9 +99,10 @@ def pretrain_teacher_decoder(teacher, decoder, train_loader, val_loader, device,
             reconstructed_points = decoder(sampled_points)
             
             knn_idx = knn(batch_points, 8) 
-            receptive_fields = compute_receptive_fields(batch_points, knn_idx, 1024)  
+            receptive_fields = compute_receptive_fields(batch_points, knn_idx, 3)  
 
             receptive_fields_tensor = torch.stack(receptive_fields).to(device)
+            print(reconstructed_points.shape, receptive_fields_tensor.shape)
             loss = chamfer_distance(reconstructed_points, receptive_fields_tensor)
 
             loss.backward()
